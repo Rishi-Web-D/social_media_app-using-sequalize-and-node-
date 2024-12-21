@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/postDetails.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <main class="post-details">
+        <div class="post-header">
+            <h2><%= post.userName %></h2>
+        </div>
+        <img src="<%= post.image_url %>" alt="Post Image" class="post-image">
+        <div class="post-caption">
+            <p><%= post.caption %></p>
+        </div>
+        <div class="post-actions">
+            <button class="like-button">Like (<%= post.id %>)</button>
+        </div>kkk 
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <ul class="comments-list">
+                <% comments.forEach(comment => { %>
+                <li class="comment"><%= comment.username %>: <%= comment.text %></li>
+                <% }); %>
+            </ul>
+            <form class="comment-form" action="/postdetails/<%= post.id %>/comment" method="POST">
+                <textarea name="comment" placeholder="Add a comment" required></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
+        
+    </main>
+    <script>
+        const authButton = document.getElementById('auth-btn');
+        const token = localStorage.getItem('user_id');
+
+        if (token) {
+            authButton.textContent = 'Logout';
+            authButton.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.reload();
+            });
+        } else {
+            authButton.textContent = 'Login';
+            authButton.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+</html>

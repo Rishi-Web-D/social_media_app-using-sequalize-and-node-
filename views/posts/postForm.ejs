@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= post ? 'Edit Post' : 'Create Post' %></title>
+  <link rel="stylesheet" href="/css/nav.css">
+  <link rel="stylesheet" href="/css/postForm.css">
+  <style>
+   
+  </style>
+</head>
+<body>
+ <!-- Include Statement for Our Nav Bar -->
+ <%-include('../partials/header.ejs')%>
+
+
+<div class="main">
+  <div class="form-container  ">
+    <h1><%= post ? 'Edit Post' : 'Create New Post' %></h1>
+    <form id="postForm" action="<%= post ? `/posts/update/${post.id}` : '/posts/' %>" method="POST" enctype="multipart/form-data">
+
+      <label for="image">Image:</label>
+      <% if (post && post.imageUrl) { %>
+        <img src="<%= post.imageUrl %>" alt="Post Image" class="preview-image" id="existing-image">
+      <% } %>
+      <input type="file" id="image" name="image" <%= post ? '' : 'required' %> accept="image/*">
+      <img id="preview" class="preview-image" style="display:none;">
+
+      <label for="caption">Caption:</label>
+      <input type="text" id="caption" name="caption" value="<%= post ? post.caption : '' %>" required>
+
+      <label for="visibility">Visibility:</label>
+      <select id="visibility" name="visibility" required>
+        <option value="all" <%= post && post.visibility === 'all' ? 'selected' : '' %>>Show to All</option>
+        <option value="me" <%= post && post.visibility === 'me' ? 'selected' : '' %>>Only to Me</option>
+      </select>
+
+      <!-- Hidden input for user_id -->
+      <input type="hidden" id="user_id" name="user_id" value="">
+
+      <button type="submit"><%= post ? 'Update Post' : 'Create Post' %></button>
+    </form>
+  </div>
+</div>
+
+
+  <script>
+    const authButton = document.getElementById('auth-btn');
+  const token = localStorage.getItem('user_id');
+
+  if (token) {
+      authButton.textContent = 'Logout';
+      authButton.addEventListener('click', () => {
+          localStorage.removeItem('token');
+          window.location.reload();
+      });
+  } else {
+      authButton.textContent = 'Login';
+      authButton.addEventListener('click', () => {
+          window.location.href = 'login.html';
+      });
+  }
+    const imageInput = document.getElementById('image');
+    const preview = document.getElementById('preview');
+    const existingImage = document.getElementById('existing-image');
+    const userIdInput = document.getElementById('user_id');
+    const postForm = document.getElementById('postForm');
+
+    // Set user_id from localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = localStorage.getItem('user_id');
+      if (userId) {
+        userIdInput.value = userId;
+      } else {
+        alert('User is not logged in.');
+        // Optionally redirect to login page
+        // window.location.href = '/login';
+      }
+    });
+
+    // Prevent form submission if user_id is missing
+    postForm.addEventListener('submit', (event) => {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) {
+        event.preventDefault();
+        alert('You must be logged in to submit this form.');
+      }
+    });
+
+    // Preview image on file selection
+    imageInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          if (existingImage) {
+            existingImage.style.display = 'none';
+          }
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+        if (existingImage) {
+          existingImage.style.display = 'block';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

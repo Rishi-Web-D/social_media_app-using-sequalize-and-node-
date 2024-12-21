@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <!-- Include Statement for Our Nav Bar -->
+    <%-include('../partials/header.ejs')%>
+
+    <main class="posts-container">
+        <% posts.forEach(post => { %>
+        <div class="post-card" onclick="window.location.href='/posts/<%= post.id %>'">
+            <div class="post-user"><%= post.userName %></div>
+            <img src="<%= post.image_url %>" alt="Post Image" class="post-image">
+            <div class="post-caption"><%= post.caption %></div>
+            <div class="post-actions">
+                <button class="like-button">Like (<%= post.id %>)</button>
+                <button class="comment-button" onclick="window.location.href='/postdetails/<%= post.id %>'">Comment</button>
+            </div>
+        </div>
+        <% }); %>
+    </main>
+     <script>
+
+        // Manage login/logout button rendering
+        const authButton = document.getElementById('auth-btn');
+        const token = localStorage.getItem('user_id');
+
+        if (token) {
+            authButton.textContent = 'Logout';
+            authButton.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.reload();
+            });
+        } else {
+            authButton.textContent = 'Login';
+            authButton.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+</html>

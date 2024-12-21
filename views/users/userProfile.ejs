@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/nav.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <main class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="/images/default-avatar.jpeg" alt="User Avatar" class="profile-avatar">
+                <h1><%= user.name %></h1>
+                <p><%= user.email %></p>
+            </div>
+            <div class="profile-details">
+                <h2>Details</h2>
+                <p><strong>Name:</strong> <%= user.name %></p>
+                <p><strong>Email:</strong> <%= user.email %></p>            
+            </div>
+            <button class="edit-profile-button">Edit Profile</button>
+        </div>
+    </main>
+
+    <script>
+        const authButton = document.getElementById('auth-btn');
+        const token = localStorage.getItem('user_id');
+
+        if (token) {
+            authButton.textContent = 'Logout';
+            authButton.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.reload();
+            });
+        } else {
+            authButton.textContent = 'Login';
+            authButton.addEventListener('click', () => {
+                window.location.href = '/login';
+            });
+        }
+    </script>
+</body>
+</html>

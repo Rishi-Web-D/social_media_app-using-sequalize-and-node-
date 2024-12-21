@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts</title>
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/myPosts.css">
+</head>
+<body>
+    <%-include('../partials/header.ejs')%>
+
+    <main class="posts-container">
+        <% posts.forEach(post => { %>
+        <div class="post-card">
+            <div class="post-user"><%= post.userName %></div>
+            <img src="<%= post.image_url %>" alt="Post Image" class="post-image">
+            <div class="post-caption"><%= post.caption %></div>
+            <div class="post-actions">
+                <button class="update-button" onclick="window.location.href='posts/update/<%= post.id %>'">UPDATE</button>
+                <button class="delete-button" onclick="showDeletePopup('<%= post.id %>')">DELETE</button>
+            </div>
+        </div>
+        <% }); %>
+    </main> 
+
+    <!-- Delete Modal -->
+    <div id="delete-popup" class="delete-popup hidden">
+        <div class="popup-content">
+            <p>Are you sure you want to delete this post?</p>
+            <button id="confirm-delete" class="confirm-delete">Confirm</button>
+            <button id="cancel-delete" class="cancel-delete">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+
+        const token = localStorage.getItem('user_id');
+        let deletePostId = null;
+    
+        // Show Delete Popup
+        function showDeletePopup(postId) {
+            deletePostId = postId;
+            document.getElementById('delete-popup').classList.remove('hidden');
+        }
+    
+        // Cancel Deletion
+        document.getElementById('cancel-delete').addEventListener('click', () => {
+            document.getElementById('delete-popup').classList.add('hidden');
+            deletePostId = null;
+        });
+        
+
+        if(token){
+            document.getElementById('confirm-delete').addEventListener('click', () => {
+            fetch(`posts/${deletePostId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete post.');
+                    }
+                });
+        });
+        }
+        else{
+            alert('You need to login to delete a post');
+        }
+   
+        // Manage login/logout button rendering
+        const authButton = document.getElementById('auth-btn');
+        
+
+        if (token) {
+            authButton.textContent = 'Logout';
+            authButton.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.reload();
+            });
+        } else {
+            authButton.textContent = 'Login';
+            authButton.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+</html>

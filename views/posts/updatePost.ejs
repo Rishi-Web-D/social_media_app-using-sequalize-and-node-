@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Post</title>
+    <link rel="stylesheet" href="/css/update.css">
+    <link rel="stylesheet" href="/css/nav.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <main class="update-container">
+        <h1>Update Post</h1>
+        <form action="<%= post.id %>" method="POST" enctype="multipart/form-data" class="update-form">
+            <label for="caption">Caption:</label>
+            <textarea id="caption" name="caption" required><%= post.caption %></textarea>
+
+            <label for="current-image">Current Image:</label>
+            <div class="current-image">
+                <img src="<%= post.image_url %>" alt="Current Post Image">
+            </div>
+
+            <label for="new-image">Choose New Image:</label>
+            <input type="file" id="new-image" name="image">
+
+            <label for="visibility">Visibility:</label>
+            <select id="visibility" name="visibility" required>
+                <option value="all" <%= post.visibility === 'all' ? 'selected' : '' %>>Everyone can view & Reply</option>
+                <option value="me" <%= post.visibility === 'me' ? 'selected' : '' %>>Only me</option>
+            </select>
+
+            <button type="submit" class="update-button">Update Post</button>
+        </form>
+    </main>
+
+    <script>
+         const authButton = document.getElementById('auth-btn');
+         const token = localStorage.getItem('user_id');
+
+        if (token) {
+            authButton.textContent = 'Logout';
+            authButton.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.reload();
+            });
+        } else {
+            authButton.textContent = 'Login';
+            authButton.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+</html>

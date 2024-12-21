@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+  }
+  
+  .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    margin: 0 15px;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: #00bcd4;
+  }
+  
+  .nav-link.active {
+    color: #00bcd4;
+    font-weight: bold;
+    border-bottom: 2px solid #00bcd4;
+    padding-bottom: 2px;
+  }
+  
+  .auth-button button {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-button button:hover {
+    background-color: #008ba3;
+  }
+  
